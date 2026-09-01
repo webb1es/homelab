@@ -1,0 +1,14 @@
+:80 {
+	reverse_proxy code-server:8080
+}
+
+# To add more services later, route by path instead of by :80 root, e.g.:
+#
+# :80 {
+# 	handle_path /code* {
+# 		reverse_proxy code-server:8080
+# 	}
+# 	handle_path /ollama* {
+# 		reverse_proxy ollama:11434
+# 	}
+# }

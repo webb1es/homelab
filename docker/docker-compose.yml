@@ -1,0 +1,34 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - homelab
+
+  code-server:
+    image: codercom/code-server:latest
+    container_name: code-server
+    restart: unless-stopped
+    environment:
+      - PASSWORD=${CODE_SERVER_PASSWORD}
+    volumes:
+      - ./code-server-config:/home/coder/.config
+      - ${PROJECTS_DIR:-./projects}:/home/coder/project
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:
