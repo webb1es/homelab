@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Secrets / environment
+.env
+*.env
+!*.env.example
+
+# Service state (bind-mounted into containers, not config)
+docker/projects/
+docker/code-server-config/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
