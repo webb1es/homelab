@@ -1,4 +1,4 @@
-# homelab
+# Webbies Homelab
 
 Turns a Mac into an always-on, headless server reachable only over
 Tailscale, that the main dev Mac can offload container work to via OrbStack.
