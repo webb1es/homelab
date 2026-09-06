@@ -5,6 +5,13 @@
 Priority: CORRECTNESS > MAINTAINABILITY > PERFORMANCE > BREVITY
 On conflict, apply higher priority and flag: `⚖️ PRIORITY CONFLICT: [A] vs [B]. Applied [A].`
 
+### Flag vocabulary
+
+The tags in this document (`⚖️`, `🚫`, `⚠️`) are the standard vocabulary for phrasing a flag — use them here and in
+any project-specific rules file that says "propose" or "flag" without giving its own tags. A project's own rules file
+may define stricter gating on *when* to stop and ask before acting; that gating governs process, these tags govern
+how the flag reads once raised.
+
 ## 1. Scope
 
 - Touch only requested files.
@@ -21,8 +28,9 @@ On conflict, apply higher priority and flag: `⚖️ PRIORITY CONFLICT: [A] vs [
 
 Flag with fix suggestion:
 
-- Duplication: 3+ near-identical blocks (≥5 lines)
-- Long function: >80 LOC
+- Duplication (rule of three): duplicate freely up to 2x; extract at the 3rd near-identical occurrence (≥5 lines)
+  only if the extraction is smaller and clearer than the duplication
+- Long function: >100 LOC
 - Complex function: cyclomatic complexity >10 (linter-derived)
 - Tight coupling: internal cross-module imports bypassing public interfaces
 - Missing error handling on external calls (network/DB/filesystem)
@@ -75,8 +83,11 @@ Flag with fix suggestion:
 
 - Functional components + hooks only
 - Extract shared logic into custom hooks
-- `useMemo`/`useCallback` only for measured expensive work
-- `React.memo` only on components proven to over-render
+- `useMemo`/`useCallback`: add only for measured expensive work, or for correctness — stabilizing a value/callback
+  that an existing `React.memo` boundary or effect dependency relies on. Never as a default habit.
+- `React.memo`: add only after profiling proves a component over-renders — never speculatively
+- Missing or incorrect hook dependency arrays are a correctness bug, not a style choice — fix on sight regardless of
+  the profiling rule above
 - Zustand/Context for cross-tree state, not prop drilling
 - Route-level lazy loading (`React.lazy` + `Suspense`)
 
@@ -99,8 +110,11 @@ Flag with fix suggestion:
 
 ## 9. Testing
 
-- Coverage gates (CI-enforced, build fails below): core 80% | infra 60% | utils 90%
-- Naming: `Test<Function>_<Scenario>_<Expected>`
+- Coverage: no hard CI gate on personal/pre-launch projects — aspirational only. Prioritize tests for business logic,
+  money/permission paths, and regressions over chasing a percentage.
+- Naming: descriptive and consistent within each stack's own idiom, not one syntax forced across languages —
+  table-driven Go/JUnit: `Test<Function>_<Scenario>_<Expected>`; Vitest/RTL (JS/TS): a descriptive string
+  (`it("calculates tax at configured rate")`)
 - Patterns: table-driven (Go) | `@ParameterizedTest` (Spring) | Vitest+RTL (React) | TestBed+Cypress (Angular)
 - Reject: fixed waits/`sleep()`, real external APIs/DB, tests asserting internals, >1% observed flake rate
 
@@ -111,7 +125,8 @@ Flag with fix suggestion:
 - RBAC enforced at API layer, not just UI
 - Never log secrets, tokens, or PII
 - Secrets via env vars/secrets manager only
-- Passwords: bcrypt or Argon2 only
+- Passwords: only relevant when a project handles credentials directly. Not applicable where auth is delegated to
+  Keycloak/OIDC (current stack). If a project ever stores/verifies passwords itself, bcrypt or Argon2 only.
 - SQL: parameterized queries only
 - Dependency bumps: check CVEs before merge (npm audit / go list -m -u / Snyk); flag high/critical CVE introductions
 
