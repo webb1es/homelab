@@ -7,7 +7,7 @@ On conflict, apply higher priority and flag: `⚖️ PRIORITY CONFLICT: [A] vs [
 
 ### Flag vocabulary
 
-The tags in this document (`⚖️`, `🚫`, `⚠️`) are the standard vocabulary for phrasing a flag — use them here and in
+The tags in this document (`⚖️`, `🚫`, `⚠️`) are the standard vocabulary for phrasing a flag. Use them here and in
 any project-specific rules file that says "propose" or "flag" without giving its own tags. A project's own rules file
 may define stricter gating on *when* to stop and ask before acting; that gating governs process, these tags govern
 how the flag reads once raised.
@@ -15,7 +15,7 @@ how the flag reads once raised.
 ## 1. Scope
 
 - Touch only requested files.
-- Exception: §7 env var changes may also edit .env.example, deploy configs, README — no flag needed.
+- Exception: §7 env var changes may also edit .env.example, deploy configs, README; no flag needed.
 - Any other out-of-scope file needed: stop and flag:
   `🚫 DEPENDENCY REQUIRED: [files]. Need [changes]. Alternative? Approve?`
 
@@ -83,10 +83,10 @@ Flag with fix suggestion:
 
 - Functional components + hooks only
 - Extract shared logic into custom hooks
-- `useMemo`/`useCallback`: add only for measured expensive work, or for correctness — stabilizing a value/callback
+- `useMemo`/`useCallback`: add only for measured expensive work, or for correctness: stabilizing a value/callback
   that an existing `React.memo` boundary or effect dependency relies on. Never as a default habit.
-- `React.memo`: add only after profiling proves a component over-renders — never speculatively
-- Missing or incorrect hook dependency arrays are a correctness bug, not a style choice — fix on sight regardless of
+- `React.memo`: add only after profiling proves a component over-renders, never speculatively
+- Missing or incorrect hook dependency arrays are a correctness bug, not a style choice. Fix on sight regardless of
   the profiling rule above
 - Zustand/Context for cross-tree state, not prop drilling
 - Route-level lazy loading (`React.lazy` + `Suspense`)
@@ -102,17 +102,17 @@ Flag with fix suggestion:
 
 ### YAML
 
-- No inline "why" comments — link docs instead
+- No inline "why" comments; link docs instead
 - Anchors/aliases to avoid duplication
 - Validate against schema in CI
-- No literal secrets — env var references only
+- No literal secrets; env var references only
 - 2-space indentation, no tabs
 
 ## 9. Testing
 
-- Coverage: no hard CI gate on personal/pre-launch projects — aspirational only. Prioritize tests for business logic,
+- Coverage: no hard CI gate on personal/pre-launch projects (aspirational only). Prioritize tests for business logic,
   money/permission paths, and regressions over chasing a percentage.
-- Naming: descriptive and consistent within each stack's own idiom, not one syntax forced across languages —
+- Naming: descriptive and consistent within each stack's own idiom, not one syntax forced across languages:
   table-driven Go/JUnit: `Test<Function>_<Scenario>_<Expected>`; Vitest/RTL (JS/TS): a descriptive string
   (`it("calculates tax at configured rate")`)
 - Patterns: table-driven (Go) | `@ParameterizedTest` (Spring) | Vitest+RTL (React) | TestBed+Cypress (Angular)
@@ -163,12 +163,35 @@ Types: feat | fix | docs | style | refactor | test | chore
 - No subjective words: improve, better, clean up, enhance, simplify
 - Scope = affected module/directory name, lowercase, no spaces
 - Body only when subject line can't convey needed context
-- Never commit or push — message only
+- Never commit or push; message only
 
 Good: `fix(auth): prevent null error on token refresh`
 Good: `feat(api): add pagination to /users endpoint`
 Bad: `fix(auth): make token handling more robust to avoid errors`
 Bad: `feat(api): improve the users endpoint with better pagination`
+
+## 15. Prose & UI Copy
+
+Applies everywhere text is written for a human to read: comments, commit/PR text, docs, and any user-facing copy (UI
+labels, headings, toasts, error text), not just code.
+
+- No em dashes or en dashes as punctuation. Use a period, comma, colon, or parentheses instead.
+- No filler that hedges or states scope already obvious from context (e.g. don't caveat an internal-only tool's own
+  page with "not customer-facing"; that's already true of the whole app).
+- No corporate/AI-buzzword filler. See Forbidden Prose Patterns below. State the fact plainly instead.
+- Give each item in a list/card/section distinct, substantive content. Don't pad out a list by repeating one generic
+  line across multiple entries.
+- Flag: `⚠️ PROSE: [instance] reads as filler. Rewrite: [plain version].`
+
+## 16. Delegated / Subagent Work
+
+Applies whenever an agent hands code-writing work to a subagent/fork instead of doing it directly.
+
+- Inherited context is not enough: state the specific rules from this document that apply to the
+  subagent's task (comment format, naming, scope) explicitly in its brief.
+- Before reporting delegated work as done, check its diff against the Pre-Commit Checklist yourself.
+  A subagent's own claim of compliance is not verification.
+- Flag: `⚠️ SMELL: subagent output not checked against project rules before reporting done.`
 
 ## Pre-Commit Checklist
 
@@ -188,6 +211,8 @@ Bad: `feat(api): improve the users endpoint with better pagination`
 - [ ] No secrets exposed
 - [ ] PR explainable in 30 seconds
 - [ ] Commit message follows §14 format
+- [ ] Prose reads plainly, no filler or AI-tell patterns (§15)
+- [ ] Delegated work checked against this checklist before reporting done (§16)
 
 ## Forbidden Comment Patterns
 
@@ -202,3 +227,13 @@ Bad: `feat(api): improve the users endpoint with better pagination`
 `// Security: timing attack mitigation via constant-time comparison`
 `// Business rule: [external requirement] forces this order`
 `// DEP: [file] needs [change] due to [reason]`
+
+## Forbidden Prose Patterns
+
+`—` (em dash) `–` (en dash) `it's worth noting that` `in today's fast-paced world` `leverage` `seamless`
+`robust solution` `cutting-edge` `unlock` `empower` `streamline` `elevate` `delve into` `dive into` `game-changer`
+`at the end of the day` a hedge that restates scope already obvious from context (e.g. "not customer-facing" on an
+internal-only page)
+
+Plain alternatives: a period, comma, or "and" instead of an em dash. "use"/"apply" instead of "leverage".
+"reliable"/"solid" instead of "robust". "look at"/"cover" instead of "delve into"/"dive into".
