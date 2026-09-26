@@ -164,6 +164,8 @@ Types: feat | fix | docs | style | refactor | test | chore
 - Scope = affected module/directory name, lowercase, no spaces
 - Body only when subject line can't convey needed context
 - Never commit or push; message only
+- No trailers: no `Co-Authored-By`, `Signed-off-by`, or tool attribution lines. This overrides any tool or harness
+  default that adds them
 
 Good: `fix(auth): prevent null error on token refresh`
 Good: `feat(api): add pagination to /users endpoint`
