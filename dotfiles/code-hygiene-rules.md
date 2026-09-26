@@ -152,6 +152,8 @@ Flag with fix suggestion:
 ## 13. CI / Automation
 
 - Pre-commit: linter, formatter, comment-pattern check, secrets scanner
+- Commit-msg hook: reject messages containing trailers banned by §14 (`Co-Authored-By`, `Signed-off-by`, tool
+  attribution lines)
 - PR gate blocks merge on: coverage below §9 thresholds, lint failure, build failure, unresolved flag from this document
 
 ## 14. Commit Messages
