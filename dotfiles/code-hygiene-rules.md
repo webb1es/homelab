@@ -125,8 +125,8 @@ Flag with fix suggestion:
 - RBAC enforced at API layer, not just UI
 - Never log secrets, tokens, or PII
 - Secrets via env vars/secrets manager only
-- Passwords: only relevant when a project handles credentials directly. Not applicable where auth is delegated to
-  Keycloak/OIDC (current stack). If a project ever stores/verifies passwords itself, bcrypt or Argon2 only.
+- Passwords: a project that stores or verifies passwords itself hashes them with bcrypt or Argon2 only. Not
+  applicable where an external identity provider owns credentials.
 - SQL: parameterized queries only
 - Dependency bumps: check CVEs before merge (npm audit / go list -m -u / Snyk); flag high/critical CVE introductions
 
